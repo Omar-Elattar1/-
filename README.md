@@ -41,11 +41,17 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        .admin-panel {
-            margin-top: 20px;
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
         }
         .social-links {
             margin: 20px 0;
+            text-align: center;
         }
         .social-links a {
             display: inline-block;
@@ -95,7 +101,7 @@
         <div id="answered-questions"></div>
     </div>
 
-    <!-- 🔵 مواقع التواصل الاجتماعي -->
+    <!-- مواقع التواصل الاجتماعي -->
     <div class="container social-links">
         <h3>تابع الشيخ أحمد حمدي على:</h3>
         <a href="https://www.tiktok.com/@ahmedhamdy_06?_t=ZS-8tgAXjYyhZA&_r=1" class="tiktok" target="_blank">تيك توك</a>
@@ -121,7 +127,6 @@
         <button onclick="deleteAllQuestions()">مسح جميع الأسئلة</button>
     </div>
 
-    <!-- ✅ الفوتر -->
     <div class="footer">
         <p class="green">صلِّ على النبي ﷺ</p>
         <p>تم الإنشاء بواسطة <a href="https://t.me/Omar_El3attar" target="_blank">عمر</a></p>
@@ -142,8 +147,12 @@
                     unansweredHTML += `
                         <div class="question">
                             <p>${q.question}</p>
-                            ${isAdminLoggedIn ? `<button onclick="startAnswering(${index})">الإجابة</button>
-                            <button class="delete-btn" onclick="deleteQuestion(${index})">حذف</button>` : ''}
+                            ${
+                                isAdminLoggedIn
+                                    ? `<button onclick="startAnswering(${index})">الإجابة</button>
+                                       <button class="delete-btn" onclick="deleteQuestion(${index})">حذف</button>`
+                                    : ''
+                            }
                         </div>
                     `;
                 } else {
@@ -206,18 +215,26 @@
             }
         }
 
+        function startAnswering(index) {
+            const answer = prompt("أدخل الإجابة:");
+            if (answer) {
+                const questions = JSON.parse(localStorage.getItem("questions")) || [];
+                questions[index].answer = answer;
+                localStorage.setItem("questions", JSON.stringify(questions));
+                loadQuestions();
+            }
+        }
+
+        function deleteQuestion(index) {
+            if (confirm("هل أنت متأكد من حذف هذا السؤال؟")) {
+                const questions = JSON.parse(localStorage.getItem("questions")) || [];
+                questions.splice(index, 1);
+                localStorage.setItem("questions", JSON.stringify(questions));
+                loadQuestions();
+            }
+        }
+
         loadQuestions();
     </script>
 </body>
-<style>
-    .social-links {
-        margin: 20px auto;
-        padding: 10px 0;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 800px;
-    }
-</style>
 </html>
