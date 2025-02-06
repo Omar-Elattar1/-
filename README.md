@@ -38,149 +38,133 @@
             margin: 5px 0;
             border-radius: 5px;
         }
-        .answer-box {
-            margin: 20px 0;
-        }
-        .question-list {
-            margin: 20px 0;
-        }
-        #answer-page {
-            display: none;
-        }
-        .footer {
-            margin-top: 50px;
-            font-size: 12px;
-            color: #888;
-        }
     </style>
 </head>
 <body>
 
-    <h1>مرحبًا بك في صفحة الأسئلة والأجوبة!</h1>
+<h1>مرحبًا بك في صفحة الأسئلة والأجوبة!</h1>
 
-    <div id="login-section" class="container">
-        <h3>تسجيل الدخول للإجابة على الأسئلة:</h3>
-        <input type="text" id="username" placeholder="اسم المستخدم" /><br><br>
-        <input type="password" id="password" placeholder="كلمة المرور" /><br><br>
-        <button onclick="login()">تسجيل الدخول</button>
-        <div id="login-error">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
-    </div>
+<div id="login-section" class="container">
+    <h3>تسجيل الدخول للإجابة على الأسئلة:</h3>
+    <input type="text" id="username" placeholder="اسم المستخدم"><br><br>
+    <input type="password" id="password" placeholder="كلمة المرور"><br><br>
+    <button onclick="login()">تسجيل الدخول</button>
+    <div id="login-error">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
+</div>
 
-    <div id="admin-panel" class="container">
-        <h3>الأسئلة غير المجابة:</h3>
-        <div id="questions-list" class="question-list"></div>
-        <button onclick="deleteAllQuestions()">مسح جميع الأسئلة</button>
-    </div>
+<div id="admin-panel" class="container">
+    <h3>الأسئلة غير المجابة:</h3>
+    <div id="questions-list"></div>
+    <button onclick="deleteAllQuestions()">مسح جميع الأسئلة</button>
+</div>
 
-    <div id="answer-page" class="container">
-        <h3>إجابة السؤال</h3>
-        <p id="current-question"></p>
-        <textarea id="answer" placeholder="اكتب إجابتك هنا..." rows="4" cols="50"></textarea><br><br>
-        <button onclick="submitAnswer()">إرسال الإجابة</button>
-    </div>
+<div id="answer-page" class="container">
+    <h3>إجابة السؤال</h3>
+    <p id="current-question"></p>
+    <textarea id="answer" placeholder="اكتب إجابتك هنا..." rows="4" cols="50"></textarea><br><br>
+    <button onclick="submitAnswer()">إرسال الإجابة</button>
+</div>
 
-    <div class="footer">
-        <p>تم التصميم بواسطة <a href="https://t.me/Omar_El3attar" target="_blank">عمر</a></p>
-        <p>حقوق الملكية محفوظة &copy; جميع الحقوق محفوظة</p>
-    </div>
+<script>
+    const adminUsername = "admin";
+    const adminPassword = "password123";
+    let isAdminLoggedIn = false;
+    let currentQuestionIndex = 0;
 
-    <script>
-        // بيانات الإدمن
-        const adminUsername = "admin";
-        const adminPassword = "password123";
+    // دالة تحميل الأسئلة من localStorage
+    function loadQuestions() {
+        const questions = JSON.parse(localStorage.getItem("questions")) || [];
+        let questionListHTML = '';
 
-        let isAdminLoggedIn = false;
-        let currentQuestionIndex = 0;
-
-        // تحميل الأسئلة
-        function loadQuestions() {
-            const questions = JSON.parse(localStorage.getItem("questions")) || [];
-            let questionListHTML = '';
-            questions.forEach((q, index) => {
-                if (!q.answer) {
-                    questionListHTML += `
-                        <div class="question">
-                            <p>${q.question}</p>
-                            <button onclick="startAnswering(${index})">الإجابة</button>
-                        </div>
-                    `;
-                }
-            });
-            document.getElementById('questions-list').innerHTML = questionListHTML;
-        }
-
-        // تسجيل الدخول
-        function login() {
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-
-            if (username === adminUsername && password === adminPassword) {
-                isAdminLoggedIn = true;  // تأكيد أن الإدمن مسجل دخوله
-                document.getElementById('login-section').style.display = 'none'; 
-                document.getElementById('admin-panel').style.display = 'block';
-                loadQuestions();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
+        questions.forEach((q, index) => {
+            if (!q.answer) {
+                questionListHTML += `
+                    <div class="question">
+                        <p>${q.question}</p>
+                        <button onclick="startAnswering(${index})">الإجابة</button>
+                    </div>
+                `;
             }
-        }
+        });
 
-        // بدء الإجابة على السؤال
-        function startAnswering(index) {
-            if (!isAdminLoggedIn) {
-                alert("يجب عليك تسجيل الدخول أولاً كإدمن");
-                return;
-            }
+        document.getElementById('questions-list').innerHTML = questionListHTML;
+    }
 
-            var questions = JSON.parse(localStorage.getItem("questions")) || [];
-            currentQuestionIndex = index;
-            document.getElementById('current-question').innerText = "السؤال: " + questions[currentQuestionIndex].question;
-            document.getElementById('answer-page').style.display = "block";
-        }
+    // دالة تسجيل الدخول
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
 
-        // إرسال الإجابة
-        function submitAnswer() {
-            if (!isAdminLoggedIn) {
-                alert("يجب عليك تسجيل الدخول أولاً كإدمن");
-                return;
-            }
-
-            var answerText = document.getElementById('answer').value;
-            if (answerText.trim() !== "") {
-                var questions = JSON.parse(localStorage.getItem("questions")) || [];
-                questions[currentQuestionIndex].answer = answerText;
-                localStorage.setItem("questions", JSON.stringify(questions));
-                currentQuestionIndex++;
-                document.getElementById('answer').value = "";
-                loadQuestions();
-                document.getElementById('answer-page').style.display = "none";
-                if (currentQuestionIndex < questions.length) {
-                    startAnswering(currentQuestionIndex);
-                }
-            } else {
-                alert("يرجى كتابة إجابة أولاً!");
-            }
-        }
-
-        // مسح جميع الأسئلة
-        function deleteAllQuestions() {
-            localStorage.removeItem("questions");
+        if (username === adminUsername && password === adminPassword) {
+            isAdminLoggedIn = true;
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
             loadQuestions();
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    }
+
+    // دالة بدء الإجابة على السؤال
+    function startAnswering(index) {
+        if (!isAdminLoggedIn) {
+            alert("يجب عليك تسجيل الدخول أولاً كإدمن");
+            return;
         }
 
-        // إضافة بعض الأسئلة مبدئيًا
-        function addSampleQuestions() {
-            const sampleQuestions = [
-                { question: "ما هو اسمك؟", answer: "" },
-                { question: "ما هي هواياتك؟", answer: "" },
-                { question: "ما هو لونك المفضل؟", answer: "" }
-            ];
-            localStorage.setItem("questions", JSON.stringify(sampleQuestions));
+        var questions = JSON.parse(localStorage.getItem("questions")) || [];
+        currentQuestionIndex = index;
+        document.getElementById('current-question').innerText = "السؤال: " + questions[currentQuestionIndex].question;
+        document.getElementById('answer-page').style.display = "block";
+    }
+
+    // دالة إرسال الإجابة
+    function submitAnswer() {
+        if (!isAdminLoggedIn) {
+            alert("يجب عليك تسجيل الدخول أولاً كإدمن");
+            return;
         }
 
-        // إذا لم تكن الأسئلة موجودة، أضفها
-        if (!localStorage.getItem("questions")) {
-            addSampleQuestions();
+        var answerText = document.getElementById('answer').value.trim();
+        if (answerText !== "") {
+            var questions = JSON.parse(localStorage.getItem("questions")) || [];
+            questions[currentQuestionIndex].answer = answerText;
+            localStorage.setItem("questions", JSON.stringify(questions));
+
+            document.getElementById('answer').value = "";
+            document.getElementById('answer-page').style.display = "none";
+            loadQuestions();
+        } else {
+            alert("يرجى كتابة إجابة أولاً!");
         }
-    </script>
+    }
+
+    // دالة مسح جميع الأسئلة
+    function deleteAllQuestions() {
+        localStorage.removeItem("questions");
+        loadQuestions();
+    }
+
+    // دالة إضافة أسئلة مبدئية
+    function addSampleQuestions() {
+        const sampleQuestions = [
+            { question: "ما هو اسمك؟", answer: "" },
+            { question: "ما هي هواياتك؟", answer: "" },
+            { question: "ما هو لونك المفضل؟", answer: "" }
+        ];
+        localStorage.setItem("questions", JSON.stringify(sampleQuestions));
+    }
+
+    // التحقق من وجود الأسئلة وإضافتها إذا كانت غير موجودة
+    if (!localStorage.getItem("questions")) {
+        addSampleQuestions();
+    }
+
+    // التأكد من أن الصفحة ستعرض بشكل صحيح بعد تحميلها
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('login-section').style.display = 'block';
+    });
+</script>
+
 </body>
 </html>
