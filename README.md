@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع الأسئلة والأجوبة</title>
+    <title>الموقع الرسمي للشيخ أحمد حمدي</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,11 +44,40 @@
         .admin-panel {
             margin-top: 20px;
         }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .tiktok { background-color: #ff0050; }
+        .instagram { background-color: #c13584; }
+        .youtube { background-color: #ff0000; }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: gray;
+        }
+        .footer .green {
+            color: green;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .footer a {
+            color: gray;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 
-    <h1>مرحبًا بك في موقع الأسئلة والأجوبة!</h1>
+    <h1>الموقع الرسمي للشيخ أحمد حمدي</h1>
     
     <div class="container">
         <h3>إضافة سؤال جديد:</h3>
@@ -65,6 +93,14 @@
     <div class="container">
         <h3>الأسئلة المجابة:</h3>
         <div id="answered-questions"></div>
+    </div>
+
+    <!-- 🔵 مواقع التواصل الاجتماعي -->
+    <div class="container social-links">
+        <h3>تابع الشيخ أحمد حمدي على:</h3>
+        <a href="https://www.tiktok.com/@ahmedhamdy_06?_t=ZS-8tgAXjYyhZA&_r=1" class="tiktok" target="_blank">تيك توك</a>
+        <a href="https://www.instagram.com/ahamdy243?igsh=MTV6aWwxNnBkemk3Mg==" class="instagram" target="_blank">إنستجرام</a>
+        <a href="https://youtube.com/@ahmedhamdy1585?si=5ys9cTLVYHdaQDDR" class="youtube" target="_blank">يوتيوب</a>
     </div>
 
     <div class="container">
@@ -83,6 +119,12 @@
         <h3>لوحة تحكم الإدمن</h3>
         <button onclick="logout()">تسجيل الخروج</button>
         <button onclick="deleteAllQuestions()">مسح جميع الأسئلة</button>
+    </div>
+
+    <!-- ✅ الفوتر -->
+    <div class="footer">
+        <p class="green">صلِّ على النبي ﷺ</p>
+        <p>تم الإنشاء بواسطة <a href="https://t.me/Omar_El3attar" target="_blank">عمر</a></p>
     </div>
 
     <script>
@@ -157,41 +199,11 @@
             loadQuestions();
         }
 
-        function startAnswering(index) {
-            const answer = prompt("اكتب إجابتك هنا:");
-            if (answer) {
-                const questions = JSON.parse(localStorage.getItem("questions")) || [];
-                questions[index].answer = answer;
-                localStorage.setItem("questions", JSON.stringify(questions));
-                loadQuestions();
-            }
-        }
-
         function deleteAllQuestions() {
             if (confirm("هل أنت متأكد من مسح جميع الأسئلة؟")) {
                 localStorage.removeItem("questions");
                 loadQuestions();
             }
-        }
-
-        function deleteQuestion(index) {
-            const questions = JSON.parse(localStorage.getItem("questions")) || [];
-            questions.splice(index, 1);
-            localStorage.setItem("questions", JSON.stringify(questions));
-            loadQuestions();
-        }
-
-        function addSampleQuestions() {
-            const sampleQuestions = [
-                { question: "ما هو اسمك؟", answer: "" },
-                { question: "ما هي هواياتك؟", answer: "" },
-                { question: "ما هو لونك المفضل؟", answer: "" }
-            ];
-            localStorage.setItem("questions", JSON.stringify(sampleQuestions));
-        }
-
-        if (!localStorage.getItem("questions")) {
-            addSampleQuestions();
         }
 
         loadQuestions();
