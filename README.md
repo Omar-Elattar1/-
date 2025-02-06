@@ -25,7 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        #login-section, #admin-panel {
+        #login-section, #admin-panel, #answer-page {
             display: none;
         }
         #login-error {
@@ -41,15 +41,23 @@
         .answer-box {
             margin: 20px 0;
         }
+        .question-list {
+            margin: 20px 0;
+        }
         #answer-page {
             display: none;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #888;
         }
     </style>
 </head>
 <body>
 
     <h1>مرحبًا بك في صفحة الأسئلة والأجوبة!</h1>
-    
+
     <div id="login-section" class="container">
         <h3>تسجيل الدخول للإجابة على الأسئلة:</h3>
         <input type="text" id="username" placeholder="اسم المستخدم" /><br><br>
@@ -60,7 +68,7 @@
 
     <div id="admin-panel" class="container">
         <h3>الأسئلة غير المجابة:</h3>
-        <div id="questions-list"></div>
+        <div id="questions-list" class="question-list"></div>
         <button onclick="deleteAllQuestions()">مسح جميع الأسئلة</button>
     </div>
 
@@ -69,6 +77,11 @@
         <p id="current-question"></p>
         <textarea id="answer" placeholder="اكتب إجابتك هنا..." rows="4" cols="50"></textarea><br><br>
         <button onclick="submitAnswer()">إرسال الإجابة</button>
+    </div>
+
+    <div class="footer">
+        <p>تم التصميم بواسطة <a href="https://t.me/Omar_El3attar" target="_blank">عمر</a></p>
+        <p>حقوق الملكية محفوظة &copy; جميع الحقوق محفوظة</p>
     </div>
 
     <script>
