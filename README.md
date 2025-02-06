@@ -76,18 +76,18 @@
         const adminPassword = "password123";
 
         let isAdminLoggedIn = false;
-        let currentQuestionIndex = null;
+        let currentQuestionIndex = 0;
 
         // تحميل الأسئلة
         function loadQuestions() {
             const questions = JSON.parse(localStorage.getItem("questions")) || [];
             let questionListHTML = '';
             questions.forEach((q, index) => {
-                if (!q.answer) {  // يظهر فقط الأسئلة غير المجابة
+                if (!q.answer) {
                     questionListHTML += `
                         <div class="question">
                             <p>${q.question}</p>
-                            <button onclick="startAnswering(${index})" ${q.answered ? 'disabled' : ''}>الإجابة</button>
+                            <button onclick="startAnswering(${index})">الإجابة</button>
                         </div>
                     `;
                 }
@@ -134,7 +134,6 @@
             if (answerText.trim() !== "") {
                 var questions = JSON.parse(localStorage.getItem("questions")) || [];
                 questions[currentQuestionIndex].answer = answerText;
-                questions[currentQuestionIndex].answered = true;  // تمييز السؤال بأنه تمت الإجابة عليه
                 localStorage.setItem("questions", JSON.stringify(questions));
                 currentQuestionIndex++;
                 document.getElementById('answer').value = "";
@@ -157,9 +156,9 @@
         // إضافة بعض الأسئلة مبدئيًا
         function addSampleQuestions() {
             const sampleQuestions = [
-                { question: "ما هو اسمك؟", answer: "", answered: false },
-                { question: "ما هي هواياتك؟", answer: "", answered: false },
-                { question: "ما هو لونك المفضل؟", answer: "", answered: false }
+                { question: "ما هو اسمك؟", answer: "" },
+                { question: "ما هي هواياتك؟", answer: "" },
+                { question: "ما هو لونك المفضل؟", answer: "" }
             ];
             localStorage.setItem("questions", JSON.stringify(sampleQuestions));
         }
