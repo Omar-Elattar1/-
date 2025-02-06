@@ -61,6 +61,20 @@
         .tiktok { background-color: #ff0050; }
         .instagram { background-color: #c13584; }
         .youtube { background-color: #ff0000; }
+        .question-box {
+            background-color: #f4f4f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: right;
+            position: relative;
+        }
+        .question-box button {
+            width: auto;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
         .footer {
             margin-top: 30px;
             font-size: 14px;
@@ -82,18 +96,19 @@
     <div class="container">
         <div class="section">
             <h2>إضافة سؤال جديد:</h2>
-            <input type="text" placeholder="اكتب سؤالك هنا...">
-            <button>إضافة السؤال</button>
+            <input id="new-question" type="text" placeholder="اكتب سؤالك هنا...">
+            <button onclick="addQuestion()">إضافة السؤال</button>
         </div>
         <div class="section">
             <h2>الأسئلة غير المجابة:</h2>
-            <!-- قائمة الأسئلة غير المجابة -->
+            <div id="unanswered-questions">
+                <!-- قائمة الأسئلة غير المجابة -->
+            </div>
         </div>
         <div class="section">
             <h2>الأسئلة المجابة:</h2>
-            <div style="background-color: #f4f4f9; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                <p><strong>السؤال:</strong> تست</p>
-                <p><strong>الإجابة:</strong> تست</p>
+            <div id="answered-questions">
+                <!-- قائمة الأسئلة المجابة -->
             </div>
         </div>
         <div class="section">
@@ -110,5 +125,49 @@
             <p>تم الإنشاء بواسطة عمر</p>
         </div>
     </div>
-</body>
-</html>
+
+    <script>
+        function addQuestion() {
+            const questionText = document.getElementById("new-question").value;
+            if (questionText.trim() === "") {
+                alert("الرجاء كتابة سؤال أولاً!");
+                return;
+            }
+
+            const unansweredSection = document.getElementById("unanswered-questions");
+
+            const questionBox = document.createElement("div");
+            questionBox.classList.add("question-box");
+
+            questionBox.innerHTML = `
+                <p><strong>السؤال:</strong> ${questionText}</p>
+                <button onclick="answerQuestion(this)">إجابة</button>
+                <button onclick="deleteQuestion(this)">حذف</button>
+            `;
+
+            unansweredSection.appendChild(questionBox);
+            document.getElementById("new-question").value = "";
+        }
+
+        function answerQuestion(button) {
+            const questionBox = button.parentElement;
+            const answeredSection = document.getElementById("answered-questions");
+
+            const answer = prompt("أدخل الإجابة:");
+            if (answer && answer.trim() !== "") {
+                const answerBox = document.createElement("div");
+                answerBox.classList.add("question-box");
+
+                answerBox.innerHTML = `
+                    <p><strong>السؤال:</strong> ${questionBox.querySelector("p").innerText.replace("السؤال: ", "")}</p>
+                    <p><strong>الإجابة:</strong> ${answer}</p>
+                `;
+
+                answeredSection.appendChild(answerBox);
+                questionBox.remove();
+            } else {
+                alert("لم يتم إدخال إجابة!");
+            }
+        }
+
+        function deleteQuestion
