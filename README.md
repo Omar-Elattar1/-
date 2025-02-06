@@ -43,6 +43,14 @@
         #answer-page {
             display: none;
         }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +96,7 @@
                         <div class="question">
                             <p>${q.question}</p>
                             <button onclick="startAnswering(${index})">الإجابة</button>
+                            <button class="delete-btn" onclick="deleteQuestion(${index})">حذف السؤال</button>
                         </div>
                     `;
                 }
@@ -151,6 +160,14 @@
         function deleteAllQuestions() {
             localStorage.removeItem("questions");
             loadQuestions();
+        }
+
+        // حذف سؤال معين
+        function deleteQuestion(index) {
+            var questions = JSON.parse(localStorage.getItem("questions")) || [];
+            questions.splice(index, 1);  // حذف السؤال من المصفوفة
+            localStorage.setItem("questions", JSON.stringify(questions));  // حفظ التغييرات
+            loadQuestions();  // تحديث عرض الأسئلة
         }
 
         // إضافة بعض الأسئلة مبدئيًا
